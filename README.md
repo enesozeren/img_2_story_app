@@ -1,1 +1,1 @@
-# img_2_story_app
+This is a small hobby project app where user uploads an image and receives a funny story in voice and text format.
