@@ -1,64 +1,26 @@
-import requests
-import os
-from dotenv import load_dotenv
+import streamlit as st
+from utils.util_funcs import image_2_text, generate_story, text_2_speech
 
-# Get the huggingface token from env
-load_dotenv()
-HF_API_TOKEN = os.getenv("HF_API_TOKEN")
-ELEVENLABS_API_TOKEN = os.getenv("ELEVENLABS_API_TOKEN")
-headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
+st.set_page_config(page_title='Image to Story')
 
-# Get the serverless inference api from huggingface
-LLM_API_URL = "https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1"
-I2TM_API_URL = "https://api-inference.huggingface.co/models/nlpconnect/vit-gpt2-image-captioning"
-T2SM_API_URL = "https://api.elevenlabs.io/v1/text-to-speech/repzAAjoKlgcT2oOAIWt"
+# Get the image from user
+image_file = st.file_uploader(label="Upload your Image", type="jpg")
 
-def image_2_text(image_filename):
-    with open(image_filename, "rb") as f:
-        data = f.read()
-    response = requests.post(I2TM_API_URL, headers=headers, data=data)
-    return response.json()
+if image_file is not None:
+    # Display the input Image
+    st.image(image_file, caption="Your Image", use_column_width=True)
 
-caption = image_2_text("savunmadım.jpg")
-print(caption)
-
-def generate_story(payload):
-	response = requests.post(LLM_API_URL, headers=headers, json=payload)
-	return response.json()
-	
-story = generate_story({
-	"inputs": 
-	f"""
-	The machine takes a text input and returns a funny story from the input.
-	INPUT: {caption}
-	MACHINE OUTPUT:
-	"""
-})
-
-print(story[0]["generated_text"])
-
-def text_2_speech(story):
-    CHUNK_SIZE = 1024
+    # Convert image to bytes
+    bytes_data = image_file.getvalue()
+    with open(image_file.name, 'wb') as file:
+        file.write(bytes_data)
     
-    headers = {
-    "Accept": "audio/mpeg",
-    "Content-Type": "application/json",
-    "xi-api-key": ELEVENLABS_API_TOKEN
-    }
+    # Get the caption & story & sound
+    caption = image_2_text(image_file.name)
+    st.write(caption)
 
-    data = {
-    "text": story,
-    "model_id": "eleven_monolingual_v1",
-    "voice_settings": {
-        "stability": 0.5,
-        "similarity_boost": 0.5
-    }
-    }
+    story = generate_story(caption)
+    st.write(story)
 
-    response = requests.post(T2SM_API_URL, json=data, headers=headers)
-    with open('output.mp3', 'wb') as f:
-        for chunk in response.iter_content(chunk_size=CHUNK_SIZE):
-            if chunk:
-                f.write(chunk)
-
-text_2_speech(story[0]["generated_text"])          
+    text_2_speech(story)
+    st.audio("story_audio.mp3")
