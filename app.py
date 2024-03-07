@@ -3,6 +3,14 @@ from utils.util_funcs import image_2_text, generate_story, text_2_speech
 
 st.set_page_config(page_title='Image to Story')
 st.title("Image to Story")
+st.caption("""Disclaimer: Use at Your Own Risk! 
+           This Streamlit app comes with no guarantees or warranties. \
+           I am not responsible for any damages, data breaches, \
+           or issues that may arise from its use. No support is provided, \
+           and the app may not be regularly updated. By using it, you agree \
+           to release me from any liabilities. If you don't agree, please \
+           refrain from using the app."""
+           )
 
 # Get the image from user
 st.header("Upload your image to get your story!")

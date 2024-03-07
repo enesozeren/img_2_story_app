@@ -1,10 +1,6 @@
 import requests
 import streamlit as st
-# from dotenv import load_dotenv
 
-# Get the huggingface token from env
-# load_dotenv()
-# HF_API_TOKEN = os.getenv("HF_API_TOKEN")
 HF_API_TOKEN = st.secrets["HF_API_TOKEN"]
 headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
 
@@ -15,7 +11,6 @@ T2SM_API_URL = "https://api-inference.huggingface.co/models/facebook/fastspeech2
 
 
 def image_2_text(image_filename):
-
     with open(image_filename, "rb") as f:
         data = f.read()    
     response = requests.post(I2TM_API_URL, headers=headers, data=data)
@@ -23,7 +18,6 @@ def image_2_text(image_filename):
 
 
 def generate_story(caption):
-
     payload = {
         "inputs": f"Create a short story that contains 50 words about {caption}:",
         "parameters": {
