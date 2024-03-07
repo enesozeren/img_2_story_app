@@ -19,7 +19,7 @@ def image_2_text(image_filename):
 
 def generate_story(caption):
     payload = {
-        "inputs": f"Create a short story that contains 50 words about {caption}:",
+        "inputs": f"Create a short very funny story that contains 50 words about {caption}:",
         "parameters": {
             "return_full_text": False,
             "max_new_tokens": 100
