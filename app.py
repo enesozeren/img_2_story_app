@@ -2,9 +2,11 @@ import streamlit as st
 from utils.util_funcs import image_2_text, generate_story, text_2_speech
 
 st.set_page_config(page_title='Image to Story')
+st.title("Image to Story")
 
 # Get the image from user
-image_file = st.file_uploader(label="Upload your Image", type="jpg")
+st.header("Upload your image to get your story!")
+image_file = st.file_uploader(label="Upload your image here", type="jpg")
 
 if image_file is not None:
     # Display the input Image
@@ -17,10 +19,11 @@ if image_file is not None:
     
     # Get the caption & story & sound
     caption = image_2_text(image_file.name)
-    st.write(caption)
 
     story = generate_story(caption)
-    st.write(story)
+    with st.expander(label="See the text"):
+        st.write(story)
 
     text_2_speech(story)
+    st.subheader("Listen to your story!")
     st.audio("story_audio.mp3")
