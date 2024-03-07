@@ -29,9 +29,10 @@ if image_file is not None:
     caption = image_2_text(image_file.name)
 
     story = generate_story(caption)
-    with st.expander(label="See the text"):
-        st.write(story)
 
     text_2_speech(story)
     st.subheader("Listen to your story!")
     st.audio("story_audio.mp3")
+
+    with st.expander(label="See the text"):
+        st.write(story)
