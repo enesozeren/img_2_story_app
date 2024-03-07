@@ -2,7 +2,6 @@ import requests
 import os
 import streamlit as st
 # from dotenv import load_dotenv
-from transformers import pipeline
 
 # Get the huggingface token from env
 # load_dotenv()
